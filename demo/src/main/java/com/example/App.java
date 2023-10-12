@@ -3,6 +3,8 @@ import com.google.api.gax.core.FixedCredentialsProvider;
 import com.google.auth.oauth2.ServiceAccountCredentials;
 import com.google.cloud.speech.v1.*;
 import com.google.cloud.speech.v1.RecognitionConfig.AudioEncoding;
+import com.google.cloud.translate.Translate;
+import com.google.cloud.translate.Translation;
 import com.google.protobuf.ByteString;
 
 import javax.sound.sampled.*;
@@ -10,6 +12,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.InputStream;
 
 public class App {
+    private static Translate translate;
     public static void main(String[] args) throws Exception {
         String jsonKeyPath = "wazuh-393418-3cd3bc23ce58.json";
         String languageCode = "en-US"; // Change to your desired language code
@@ -74,7 +77,12 @@ public class App {
 
         // Print transcription results
         for (SpeechRecognitionResult result : response.getResultsList()) {
-            System.out.println("Transcript: " + result.getAlternatives(0).getTranscript());
+            String speech = result.getAlternatives(0).getTranscript();
+            Translation translation = translate.translate(
+                speech, Translate.TranslateOption.sourceLanguage("en"),
+                Translate.TranslateOption.targetLanguage("es"),
+                Translate.TranslateOption.model("base"));
+            System.out.println("Transcript: " + translation.getTranslatedText());
         }
 
         // Close the SpeechClient
