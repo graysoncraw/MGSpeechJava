@@ -14,8 +14,8 @@
 
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-    <maven.compiler.source>1.8</maven.compiler.source>
-    <maven.compiler.target>1.8</maven.compiler.target>
+    <maven.compiler.source>17</maven.compiler.source>
+    <maven.compiler.target>17</maven.compiler.target>
   </properties>
 
   <dependencyManagement>
@@ -23,7 +23,7 @@
     <dependency>
       <groupId>com.google.cloud</groupId>
       <artifactId>libraries-bom</artifactId>
-      <version>26.24.0</version>
+      <version>26.27.0</version>
       <type>pom</type>
       <scope>import</scope>
     </dependency>
@@ -39,12 +39,27 @@
     <groupId>com.google.cloud</groupId>
     <artifactId>google-cloud-translate</artifactId>
   </dependency>
+    <dependency>
+    <groupId>com.google.cloud</groupId>
+    <artifactId>google-cloud-notebooks</artifactId>
+  </dependency>
+  <dependency>
+  <groupId>com.google.cloud</groupId>
+  <artifactId>google-cloud-aiplatform</artifactId>
+  <version>0.4.0</version>
+</dependency>
   <dependency>
     <groupId>junit</groupId>
     <artifactId>junit</artifactId>
     <version>4.11</version>
     <scope>test</scope>
   </dependency>
+    <dependency>
+      <groupId>org.apache.opennlp</groupId>
+      <artifactId>opennlp-tools</artifactId>
+      <version>2.3.1</version>
+  </dependency>
+  
 </dependencies>
 
   <build>
