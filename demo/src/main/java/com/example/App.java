@@ -15,26 +15,13 @@ import com.google.protobuf.ByteString;
 import javax.sound.sampled.*;
 
 import java.io.ByteArrayOutputStream;
-import java.io.FileInputStream;
-import java.io.IOException;
 import java.io.InputStream;
-
-import com.google.cloud.aiplatform.v1beta1.EndpointName;
-import com.google.cloud.aiplatform.v1beta1.PredictResponse;
-import com.google.cloud.aiplatform.v1beta1.PredictionServiceClient;
-import com.google.cloud.aiplatform.v1beta1.PredictionServiceSettings;
-
-import com.google.protobuf.Value;
-import com.google.protobuf.util.JsonFormat;
-
-import java.util.ArrayList;
-import java.util.List;
-
-
-
+import py4j.GatewayServer;
 
 public class App {
     public static void main(String[] args) throws Exception {
+        GatewayServer gatewayServer = new GatewayServer(new PythonSummarizer());
+        gatewayServer.start();
         String jsonKeyPath = "wazuh-393418-3cd3bc23ce58.json";
         String languageCode = "en-US"; // Change to your desired language code
         String translatedLanguage = "es";
@@ -139,109 +126,11 @@ public class App {
                 speech, Translate.TranslateOption.sourceLanguage("en"),
                 Translate.TranslateOption.targetLanguage(translatedLanguage));
             System.out.println("Transcript in '" + translatedLanguage + "': " + translation.getTranslatedText());
-
-            // Summarize the speech text here
-
-        //     String instance =
-        // "{ \"content\": \"Background: There is evidence that there have been significant changes \n"
-        //     + "in Amazon rainforest vegetation over the last 21,000 years through the Last \n"
-        //     + "Glacial Maximum (LGM) and subsequent deglaciation. Analyses of sediment \n"
-        //     + "deposits from Amazon basin paleo lakes and from the Amazon Fan indicate that \n"
-        //     + "rainfall in the basin during the LGM was lower than for the present, and this \n"
-        //     + "was almost certainly associated with reduced moist tropical vegetation cover \n"
-        //     + "in the basin. There is debate, however, over how extensive this reduction \n"
-        //     + "was. Some scientists argue that the rainforest was reduced to small, isolated \n"
-        //     + "refugia separated by open forest and grassland; other scientists argue that \n"
-        //     + "the rainforest remained largely intact but extended less far to the north, \n"
-        //     + "south, and east than is seen today. This debate has proved difficult to \n"
-        //     + "resolve because the practical limitations of working in the rainforest mean \n"
-        //     + "that data sampling is biased away from the center of the Amazon basin, and \n"
-        //     + "both explanations are reasonably well supported by the available data.\n"
-        //     + "\n"
-        //     + "Q: What does LGM stands for?\n"
-        //     + "A: Last Glacial Maximum.\n"
-        //     + "\n"
-        //     + "Q: What did the analysis from the sediment deposits indicate?\n"
-        //     + "A: Rainfall in the basin during the LGM was lower than for the present.\n"
-        //     + "\n"
-        //     + "Q: What are some of scientists arguments?\n"
-        //     + "A: The rainforest was reduced to small, isolated refugia separated by open forest"
-        //     + " and grassland.\n"
-        //     + "\n"
-        //     + "Q: There have been major changes in Amazon rainforest vegetation over the last how"
-        //     + " many years?\n"
-        //     + "A: 21,000.\n"
-        //     + "\n"
-        //     + "Q: What caused changes in the Amazon rainforest vegetation?\n"
-        //     + "A: The Last Glacial Maximum (LGM) and subsequent deglaciation\n"
-        //     + "\n"
-        //     + "Q: What has been analyzed to compare Amazon rainfall in the past and present?\n"
-        //     + "A: Sediment deposits.\n"
-        //     + "\n"
-        //     + "Q: What has the lower rainfall in the Amazon during the LGM been attributed to?\n"
-        //     + "A:\"}";
-        //     String parameters =
-        //         "{\n"
-        //             + "  \"temperature\": 0.5,\n"
-        //             + "  \"maxOutputTokens\": 1024,\n"
-        //             + "  \"topP\": 1,\n"
-        //             + "  \"topK\": 40\n"
-        //             + "}";
-        //     String project = "wazuh-393418";
-        //     String location = "us-central1";
-        //     String publisher = "google";
-        //     String model = "text-bison@002";
-
-        //     summarizeText(instance, project, location, publisher, model);
         }
 
         // Close the SpeechClient
         speechClient.close();
     }
-
-
-
-    // public static void summarizeText(
-    //     String instance,
-    //     String parameters,
-    //     String project,
-    //     String location,
-    //     String publisher,
-    //     String model)
-    //     throws IOException {
-    //   String endpoint = String.format("%s-aiplatform.googleapis.com:443", location);
-    //   PredictionServiceSettings predictionServiceSettings =
-    //       PredictionServiceSettings.newBuilder()
-    //           .setEndpoint(endpoint)
-    //           .build();
-  
-    //   // Initialize client that will be used to send requests. This client only needs to be created
-    //   // once, and can be reused for multiple requests.
-    //   try (PredictionServiceClient predictionServiceClient =
-    //       PredictionServiceClient.create(predictionServiceSettings)) {
-    //     final EndpointName endpointName =
-    //         EndpointName.ofProjectLocationPublisherModelName(project, location, publisher, model);
-  
-    //     // Use Value.Builder to convert instance to a dynamically typed value that can be
-    //     // processed by the service.
-    //     Value.Builder instanceValue = Value.newBuilder();
-    //     JsonFormat.parser().merge(instance, instanceValue);
-    //     List<Value> instances = new ArrayList<>();
-    //     instances.add(instanceValue.build());
-  
-    //     // Use Value.Builder to convert parameter to a dynamically typed value that can be
-    //     // processed by the service.
-    //     Value.Builder parameterValueBuilder = Value.newBuilder();
-    //     JsonFormat.parser().merge(parameters, parameterValueBuilder);
-    //     Value parameterValue = parameterValueBuilder.build();
-  
-    //     PredictResponse predictResponse =
-    //         predictionServiceClient.predict(endpointName, instances, parameterValue);
-    //     System.out.println("Predict Response");
-    //     System.out.println(predictResponse);
-    //   }
-    // }
-    
 
     private static InputStream getCredentialStream(String jsonKeyPath) {
         try {
