@@ -20,12 +20,15 @@ import py4j.GatewayServer;
 
 public class App {
     public static void main(String[] args) throws Exception {
-        GatewayServer gatewayServer = new GatewayServer(new PythonSummarizer());
-        gatewayServer.start();
+        // GatewayServer gatewayServer = new GatewayServer(new PythonSummarizer());
+        // gatewayServer.start();
+        PythonSummarizer summarize = new PythonSummarizer();
+        summarize.startServer();
+        
         String jsonKeyPath = "wazuh-393418-3cd3bc23ce58.json";
         String languageCode = "en-US"; // Change to your desired language code
         String translatedLanguage = "es";
-
+        String completePhrase = "";
 
         // Initialize the SpeechClient using the JSON key file
         SpeechClient speechClient = SpeechClient.create(SpeechSettings.newBuilder()
@@ -105,6 +108,7 @@ public class App {
                 .setSampleRateHertz(16000)
                 // Sets the language code for the recognition. It's based on the language you want to recognize (e.g., "en-US" for US English).
                 .setLanguageCode(languageCode)
+                .setEnableAutomaticPunctuation(true)
                 .build();
 
         // RecognitionAudio is a data structure used in the Google Cloud API to detect audio from bytes.
@@ -120,13 +124,19 @@ public class App {
             // For each recognition result, you extract the recognized transcript (text) from the 
             // first alternative (the most likely transcription) and store it
             String speech = result.getAlternatives(0).getTranscript();
-            System.out.println("Transcript in 'en': "+ speech);
-            // Translate the speech
-            Translation translation = translate.translate(
-                speech, Translate.TranslateOption.sourceLanguage("en"),
-                Translate.TranslateOption.targetLanguage(translatedLanguage));
-            System.out.println("Transcript in '" + translatedLanguage + "': " + translation.getTranslatedText());
+            completePhrase += speech;
         }
+        System.out.println("Transcript in 'en': "+ completePhrase);
+        // Translate the speech
+            Translation translation = translate.translate(
+                completePhrase, Translate.TranslateOption.sourceLanguage("en"),
+                Translate.TranslateOption.targetLanguage(translatedLanguage));
+            System.out.println("\nTranscript in '" + translatedLanguage + "': " + translation.getTranslatedText());
+
+        String thesummary = summarize.getSummary(completePhrase);
+        System.out.println("\nSummary: " + thesummary);
+
+        summarize.stopServer();
 
         // Close the SpeechClient
         speechClient.close();
