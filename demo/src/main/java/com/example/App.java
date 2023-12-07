@@ -2,18 +2,17 @@ package com.example;
 
 import com.google.api.gax.core.FixedCredentialsProvider;
 import com.google.auth.oauth2.ServiceAccountCredentials;
+
 import com.google.cloud.speech.v1.*;
 import com.google.cloud.speech.v1.RecognitionConfig.AudioEncoding;
+
 import com.google.cloud.translate.Translate;
 import com.google.cloud.translate.TranslateOptions;
 import com.google.cloud.translate.Translation;
+
 import com.google.protobuf.ByteString;
 
-import io.opencensus.common.ServerStatsFieldEnums.Size;
-
 import javax.sound.sampled.*;
-
-import org.checkerframework.common.returnsreceiver.qual.This;
 
 import java.io.ByteArrayOutputStream;
 import java.io.InputStream;
@@ -118,11 +117,12 @@ public class App {
             // For each recognition result, you extract the recognized transcript (text) from the 
             // first alternative (the most likely transcription) and store it
             String speech = result.getAlternatives(0).getTranscript();
+            System.out.println("Transcript in 'en': "+ speech);
             // Translate the speech
             Translation translation = translate.translate(
                 speech, Translate.TranslateOption.sourceLanguage("en"),
                 Translate.TranslateOption.targetLanguage(translatedLanguage));
-            System.out.println("Transcript in '" + translatedLanguage + "'':" + translation.getTranslatedText());
+            System.out.println("Transcript in '" + translatedLanguage + "': " + translation.getTranslatedText());
         }
 
         // Close the SpeechClient
