@@ -6,7 +6,12 @@ summarizer = pipeline("summarization", model="google/flan-t5-base")
 
 class SummarizerServer:
     def getSummary(self, text):
-        summary = summarizer(text, max_length=130, min_length=30, do_sample=False)
+        # Determine min_length based on the length of the text
+        min_length = 10 if len(text.split()) < 15 else 30
+        
+        # Adjust min_length in the summarizer call
+        summary = summarizer(text, max_length=130, min_length=min_length, do_sample=False)
+        
         # max number of words, min number of words, and returns highest probability words
         return summary[0]['summary_text']
 
@@ -18,6 +23,5 @@ if __name__ == "__main__":
     # Expose the server to Java through the gateway
     gateway.entry_point.server = server
 
-    #print("Py4J Gateway Server Started. Waiting for requests...")
-
+    # Print the summary for the input text from the command line
     print(server.getSummary(sys.argv[1]))

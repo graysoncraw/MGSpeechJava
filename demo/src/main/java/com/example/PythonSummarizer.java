@@ -29,7 +29,6 @@ public class PythonSummarizer {
     }
 
     public String getSummary(String text) {
-        URL resourceUrl = getClass().getResource("/SummarizerServer.py");
         // String pythonScriptPath = resourceUrl.getPath();
         // System.out.println(pythonScriptPath);
         String pythonScriptPath = "demo/src/main/resources/SummarizerServer.py";
