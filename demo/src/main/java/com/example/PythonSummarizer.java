@@ -66,18 +66,5 @@ public class PythonSummarizer {
             return "Error: " + e.getMessage();
         }
     }
-
-    public static void main(String[] args) {
-        PythonSummarizer summarizer = new PythonSummarizer();
-        summarizer.startServer();
-
-        // Your Java code can interact with PythonSummarizer here
-        // For example:
-        String article = "Your article text goes here...";
-        String summary = summarizer.getSummary(article);
-        System.out.println("Summary: " + summary);
-
-        summarizer.stopServer();
-    }
 }
 
